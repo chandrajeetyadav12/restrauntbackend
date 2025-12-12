@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db.js");
 const contactRoutes = require("./routes/contactRoute");
+const categoryRoutes=require("./routes/categoryRoutes");
+const foodRoutes =require("./routes/foodRoutes")
 dotenv.config();
 
 connectDB(); // connect to MongoDB
@@ -12,4 +14,6 @@ app.use(cors());
 app.use(express.json());
 // api for contact
 app.use("/api/contact", contactRoutes);
+app.use("/api/categories",categoryRoutes);
+app.use("/api/foods",foodRoutes);
 app.listen(5000, () => console.log("Server running on 5000"));

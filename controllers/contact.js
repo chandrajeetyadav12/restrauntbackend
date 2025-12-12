@@ -1,8 +1,6 @@
 const Contact = require("../models/Contact");
 
-// @desc    Create a new contact message
-// @route   POST /api/contact
-// @access  Public
+
 const createContact = async (req, res) => {
   try {
     const contact = await Contact.create(req.body);
