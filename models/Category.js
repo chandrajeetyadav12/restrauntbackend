@@ -6,7 +6,11 @@ const categorySchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true
-  }
+  },
+      image: {
+      type: String,
+      default: "", // Cloudinary URL
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Category", categorySchema);
