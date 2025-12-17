@@ -7,13 +7,15 @@ const {
     getItemsBySection,
     getMenuItemById,
     updateMenuItem,
-    deleteMenuItem
+    deleteMenuItem,
+    getPopularItems
 } = require("../controllers/menuItemController");
-
+router.get("/popular", getPopularItems);        // getpopular food
 router.post("/", upload.single("image"), createMenuItem);        // CREATE
 router.get("/section/:sectionId", getItemsBySection);            // READ (tabs)
 router.get("/:id", getMenuItemById);                             // READ ONE
 router.put("/:id", upload.single("image"), updateMenuItem);      // UPDATE
-router.delete("/:id", deleteMenuItem);                           // DELETE
+router.delete("/:id", deleteMenuItem);  
+                         // DELETE
 
 module.exports = router;

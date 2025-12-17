@@ -23,7 +23,11 @@ const menuItemSchema = new mongoose.Schema({
     required: true
   },
 
-  isVeg: { type: Boolean, default: true }
+  isVeg: { type: Boolean, default: true },
+  isPopular: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);

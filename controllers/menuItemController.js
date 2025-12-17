@@ -8,7 +8,7 @@ const Cuisine = require("../models/Cuisine");
  */
 exports.createMenuItem = async (req, res) => {
   try {
-    const { name, description, price,subcategory, cuisine, section,isVeg } = req.body;
+    const { name, description, price,subcategory, cuisine, section,isVeg,isPopular } = req.body;
 
     if (!name || !price || !cuisine || !section) {
       return res.status(400).json({ message: "Required fields missing" });
@@ -30,10 +30,23 @@ exports.createMenuItem = async (req, res) => {
       cuisine,
       section,
       image: req.file?.path,
-      isVeg
+      isVeg,
+      isPopular
     });
 
     res.status(201).json(item);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+//  GET POPULAR ITEMS (USER PANEL)
+exports.getPopularItems = async (req, res) => {
+  try {
+    const items = await MenuItem.find({ isPopular: true })
+      .populate("cuisine", "name",)
+      .populate("section", "name");
+
+    res.json(items);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -133,3 +146,4 @@ exports.deleteMenuItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
