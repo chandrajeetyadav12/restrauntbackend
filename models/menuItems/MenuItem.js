@@ -27,7 +27,11 @@ const menuItemSchema = new mongoose.Schema({
   isPopular: {
     type: Boolean,
     default: false
-  }
+  },
+  salesCount: {
+  type: Number,
+  default: 0
+},
 }, { timestamps: true });
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);

@@ -8,7 +8,7 @@ const Cuisine = require("../models/Cuisine");
  */
 exports.createMenuItem = async (req, res) => {
   try {
-    const { name, description, price,subcategory, cuisine, section,isVeg,isPopular } = req.body;
+    const { name, description, price,subcategory, cuisine, section,isVeg,isPopular,salesCount } = req.body;
 
     if (!name || !price || !cuisine || !section) {
       return res.status(400).json({ message: "Required fields missing" });
@@ -31,7 +31,8 @@ exports.createMenuItem = async (req, res) => {
       section,
       image: req.file?.path,
       isVeg,
-      isPopular
+      isPopular,
+      salesCount
     });
 
     res.status(201).json(item);
@@ -39,6 +40,26 @@ exports.createMenuItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// get bestSellingdish
+exports.getBestSellingDishes = async (req, res) => {
+  try {
+    const limit = Number(req.query.limit) || 10;
+
+    const items = await MenuItem.find({salesCount: { $gt: 5 }})
+    
+      .sort({ salesCount: -1 }) // highest sold first
+      .limit(limit);
+
+    res.status(200).json({
+      success: true,
+      count: items.length,
+      data: items
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //  GET POPULAR ITEMS (USER PANEL)
 exports.getPopularItems = async (req, res) => {
   try {
@@ -110,8 +131,9 @@ exports.updateMenuItem = async (req, res) => {
     item.name = req.body.name || item.name;
     item.description = req.body.description || item.description;
     item.price = req.body.price || item.price;
+    item.isPopular=req.body.isPopular || item.isPopular
 
-    // ✅ update subcategory correctly
+    //  update subcategory correctly
     if ("subcategory" in req.body) {
       item.subcategory = req.body.subcategory || null;
     }

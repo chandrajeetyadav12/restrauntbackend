@@ -8,9 +8,12 @@ const {
     getMenuItemById,
     updateMenuItem,
     deleteMenuItem,
-    getPopularItems
+    getPopularItems,
+    getBestSellingDishes
 } = require("../controllers/menuItemController");
 router.get("/popular", getPopularItems);        // getpopular food
+//  BEST SELLING (salesCount only)
+router.get("/best-selling", getBestSellingDishes);
 router.post("/", upload.single("image"), createMenuItem);        // CREATE
 router.get("/section/:sectionId", getItemsBySection);            // READ (tabs)
 router.get("/:id", getMenuItemById);                             // READ ONE
