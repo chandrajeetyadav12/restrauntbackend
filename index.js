@@ -31,7 +31,7 @@ app.use("/api/variant-groups", variantGroupRoutes);
 app.use("/api/variant-options", variantOptionRoutes);
 app.use("/api/addons", addonRoutes);
 
+const PORT = process.env.PORT || 5000;
 
 
-
-app.listen(5000, () => console.log("Server running on 5000"));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
