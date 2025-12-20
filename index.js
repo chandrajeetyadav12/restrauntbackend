@@ -17,6 +17,7 @@ const addonRoutes=require("./routes/addonRoutes.js")
 connectDB(); // connect to MongoDB
 
 const app = express();
+app.disable("etag");
 app.use(cors());
 app.use(express.json());
 // api for contact
