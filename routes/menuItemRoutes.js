@@ -18,7 +18,7 @@ router.post("/", upload.single("image"), createMenuItem);        // CREATE
 router.get("/section/:sectionId", getItemsBySection);            // READ (tabs)
 router.get("/:id", getMenuItemById);                             // READ ONE
 router.put("/:id", upload.single("image"), updateMenuItem);      // UPDATE
-router.delete("/:id", deleteMenuItem);  
-                         // DELETE
+router.delete("/:id", deleteMenuItem);
+
 
 module.exports = router;

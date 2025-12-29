@@ -12,7 +12,7 @@ const menuStructure=require("./routes/menuStructureRoutes.js")
 const variantGroupRoutes=require("./routes/variantGroupRoutes.js")
 const variantOptionRoutes=require("./routes/variantOptionRoutes.js")
 const addonRoutes=require("./routes/addonRoutes.js")
-
+const getMenuRoutes=require("./routes/getMenuRoutes.js")
 
 connectDB(); // connect to MongoDB
 
@@ -31,6 +31,7 @@ app.use("/api/menuStructure",menuStructure);
 app.use("/api/variant-groups", variantGroupRoutes);
 app.use("/api/variant-options", variantOptionRoutes);
 app.use("/api/addons", addonRoutes);
+app.use("/api/menu",getMenuRoutes);
 
 const PORT = process.env.PORT || 5000;
 
