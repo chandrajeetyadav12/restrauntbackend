@@ -21,7 +21,6 @@ exports.createMenuItem = async (req, res) => {
     if (!cuisineExists || !sectionExists) {
       return res.status(404).json({ message: "Cuisine or section not found" });
     }
-
     const item = await MenuItem.create({
       name,
       description,
