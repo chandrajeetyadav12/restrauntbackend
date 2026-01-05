@@ -1,5 +1,6 @@
 const MenuSection = require("../models/MenuSection");
 const Cuisine = require("../models/Cuisine");
+const MenuItem = require("../models/menuItems/MenuItem");
 
 
 /**
@@ -8,7 +9,7 @@ const Cuisine = require("../models/Cuisine");
  */
 exports.createMenuSection = async (req, res) => {
   try {
-    const { name,description,isActive, cuisine ,order,} = req.body;
+    const { name, description, isActive, cuisine, order, } = req.body;
 
     if (!name || !cuisine) {
       return res.status(400).json({ message: "Name and cuisine are required" });
@@ -26,7 +27,7 @@ exports.createMenuSection = async (req, res) => {
       return res.status(400).json({ message: "Section already exists for this cuisine" });
     }
 
-    const section = await MenuSection.create({ name,description,isActive, cuisine,order });
+    const section = await MenuSection.create({ name, description, isActive, cuisine, order });
     res.status(201).json(section);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -54,7 +55,7 @@ exports.getSectionsByCuisine = async (req, res) => {
 exports.getMenuSectionById = async (req, res) => {
   try {
     const section = await MenuSection.findById(req.params.id)
-      .populate("cuisine", "name","description","isActive","order");
+      .populate("cuisine", "name", "description", "isActive", "order");
 
     if (!section) {
       return res.status(404).json({ message: "Menu section not found" });
@@ -77,8 +78,19 @@ exports.updateMenuSection = async (req, res) => {
     if (!section) {
       return res.status(404).json({ message: "Menu section not found" });
     }
+    if ("name" in req.body) {
+      section.name = req.body.name;
+    }
 
-    section.name = req.body.name || section.name;
+    // If cuisine is being updated
+    if ("cuisine" in req.body) {
+      const cuisineExists = await Cuisine.findById(req.body.cuisine);
+      if (!cuisineExists) {
+        return res.status(400).json({ message: "Invalid cuisine ID" });
+      }
+      section.cuisine = req.body.cuisine;
+    }
+    // section.name = req.body.name || section.name;
     await section.save();
 
     res.json(section);
@@ -93,6 +105,13 @@ exports.updateMenuSection = async (req, res) => {
  */
 exports.deleteMenuSection = async (req, res) => {
   try {
+    const items = await MenuItem.find({ menuSection: req.params.id });
+
+    if (items.length > 0) {
+      return res.status(400).json({
+        message: "Delete menu items first",
+      });
+    }
     const section = await MenuSection.findById(req.params.id);
 
     if (!section) {

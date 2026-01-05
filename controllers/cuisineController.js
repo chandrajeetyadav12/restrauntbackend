@@ -1,11 +1,12 @@
 // controllers/cuisineController.js
 const Cuisine = require("../models/Cuisine");
+const MenuSection = require("../models/MenuSection");
 
 
 //  CREATE CUISINE
 exports.createCuisine = async (req, res) => {
   try {
-    const { name,description } = req.body;
+    const { name, description } = req.body;
 
     const exists = await Cuisine.findOne({ name });
     if (exists) {
@@ -13,7 +14,7 @@ exports.createCuisine = async (req, res) => {
     }
 
     const cuisine = await Cuisine.create({
-      name,description
+      name, description
     });
 
     res.status(201).json(cuisine);
@@ -56,7 +57,11 @@ exports.updateCuisine = async (req, res) => {
       return res.status(404).json({ message: "Cuisine not found" });
     }
 
-    cuisine.name = req.body.name || cuisine.name;
+    // cuisine.name = req.body.name || cuisine.name;
+    if ("name" in req.body) {
+      cuisine.name = req.body.name;
+    }
+
 
     await cuisine.save();
     res.json(cuisine);
@@ -69,6 +74,13 @@ exports.updateCuisine = async (req, res) => {
 //  DELETE CUISINE
 exports.deleteCuisine = async (req, res) => {
   try {
+    const sections = await MenuSection.find({ cuisine: req.params.id });
+
+    if (sections.length > 0) {
+      return res.status(400).json({
+        message: "Delete menu sections first",
+      });
+    }
     const cuisine = await Cuisine.findById(req.params.id);
     if (!cuisine) {
       return res.status(404).json({ message: "Cuisine not found" });

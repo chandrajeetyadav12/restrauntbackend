@@ -137,7 +137,27 @@ exports.updateMenuItem = async (req, res) => {
     if ("subcategory" in req.body) {
       item.subcategory = req.body.subcategory || null;
     }
+    // section change
+    //  SECTION UPDATE (auto-sync cuisine)
+    if ("section" in req.body) {
+      const section = await MenuSection.findById(req.body.section);
+      if (!section) {
+        return res.status(400).json({ message: "Invalid menu section ID" });
+      }
 
+      item.section = section._id;
+      item.cuisine = section.cuisine; //  REQUIRED
+    }
+
+    //  DIRECT CUISINE UPDATE (optional)
+    if ("cuisine" in req.body) {
+      const cuisine = await Cuisine.findById(req.body.cuisine);
+      if (!cuisine) {
+        return res.status(400).json({ message: "Invalid cuisine ID" });
+      }
+
+      item.cuisine = cuisine._id;
+    }
     if (req.file) {
       item.image = req.file.path;
     }
