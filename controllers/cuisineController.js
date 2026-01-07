@@ -74,21 +74,31 @@ exports.updateCuisine = async (req, res) => {
 //  DELETE CUISINE
 exports.deleteCuisine = async (req, res) => {
   try {
-    const sections = await MenuSection.find({ cuisine: req.params.id });
+    const cuisineId = req.params.id;
 
-    if (sections.length > 0) {
-      return res.status(400).json({
-        message: "Delete menu sections first",
-      });
-    }
-    const cuisine = await Cuisine.findById(req.params.id);
+    // 1. Check cuisine exists
+    const cuisine = await Cuisine.findById(cuisineId);
     if (!cuisine) {
       return res.status(404).json({ message: "Cuisine not found" });
     }
 
-    await cuisine.deleteOne();
-    res.json({ message: "Cuisine deleted successfully" });
+    // 2. Find all menu sections under this cuisine
+    const sections = await MenuSection.find({ cuisine: cuisineId });
+
+    const sectionIds = sections.map((section) => section._id);
+
+    // 3. Delete all menu items under those sections
+    await MenuItem.deleteMany({ section: { $in: sectionIds } });
+
+    // 4. Delete all menu sections
+    await MenuSection.deleteMany({ cuisine: cuisineId });
+
+    // 5. Delete cuisine
+    await Cuisine.deleteOne({ _id: cuisineId });
+
+    res.json({ message: "Cuisine and related data deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
