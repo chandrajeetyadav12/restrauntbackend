@@ -24,7 +24,7 @@ app.use(express.json());
 app.use("/api/contact", contactRoutes);
 app.use("/api/categories",categoryRoutes);
 app.use("/api/foods",foodRoutes);
-app.use("/api/Cuisine",CuisineRoutes);
+app.use("/api/cuisines",CuisineRoutes);
 app.use("/api/menuSection",menuSectionRoutes);
 app.use("/api/menuItems",menuItems);
 app.use("/api/menuStructure",menuStructure);
