@@ -34,7 +34,7 @@ app.use("/api/variant-options", variantOptionRoutes);
 app.use("/api/addons", addonRoutes);
 app.use("/api/menu",getMenuRoutes);
 app.use("/api/admin/dashboard",dashboardSummaryRoutes);
-
+app.use("/api/auth", require("./routes/authRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
