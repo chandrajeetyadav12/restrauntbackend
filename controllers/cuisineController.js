@@ -6,7 +6,7 @@ const MenuItem =require("../models/menuItems/MenuItem")
 //  CREATE CUISINE
 exports.createCuisine = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description,isActive } = req.body;
 
     const exists = await Cuisine.findOne({ name });
     if (exists) {
@@ -14,7 +14,7 @@ exports.createCuisine = async (req, res) => {
     }
 
     const cuisine = await Cuisine.create({
-      name, description
+      name, description,isActive
     });
 
     res.status(201).json(cuisine);
