@@ -16,7 +16,6 @@ exports.getDashboardSummary = async (req, res) => {
     ] = await Promise.all([
       Cuisine.countDocuments(),
       Cuisine.countDocuments({ isActive: true }),
-      Cuisine.countDocuments({ isActive: false }),
       MenuSection.countDocuments(),
       MenuItem.countDocuments(),
       MenuItem.countDocuments({ isPopular: true }),

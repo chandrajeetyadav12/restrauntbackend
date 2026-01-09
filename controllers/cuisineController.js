@@ -61,7 +61,9 @@ exports.updateCuisine = async (req, res) => {
     if ("name" in req.body) {
       cuisine.name = req.body.name;
     }
-
+    if ("isActive" in req.body) {
+      cuisine.isActive = req.body.isActive;
+    }
 
     await cuisine.save();
     res.json(cuisine);
