@@ -12,7 +12,7 @@ const {
 router.post("/",protect, adminOnly, createCuisine);
 router.get("/", getCuisines);
 router.get("/:id", getCuisineById);
-router.put("/:id",  updateCuisine);
-router.delete("/:id", deleteCuisine);
+router.put("/:id",protect, adminOnly,  updateCuisine);
+router.delete("/:id",protect, adminOnly, deleteCuisine);
 
 module.exports = router;
