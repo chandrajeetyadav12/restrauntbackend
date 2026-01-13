@@ -35,6 +35,7 @@ app.use("/api/addons", addonRoutes);
 app.use("/api/menu",getMenuRoutes);
 app.use("/api/admin/dashboard",dashboardSummaryRoutes);
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
