@@ -25,11 +25,6 @@ exports.updateProfile = async (req, res) => {
     if (req.file) {
       user.image = req.file.path;
     }
-
-    if (req.body.password) {
-      user.password = req.body.password; // will be hashed by pre-save hook
-    }
-
     await user.save();
 
     res.json({
