@@ -5,7 +5,9 @@ const cuisineSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        uppercase: true,
+        trim:true
     },
     description: {
         type: String,          // optional text about the cuisine

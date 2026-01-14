@@ -105,9 +105,9 @@ exports.updateMenuSection = async (req, res) => {
  */
 exports.deleteMenuSection = async (req, res) => {
   try {
-    const items = await MenuItem.find({ menuSection: req.params.id });
+    const itemscount = await MenuItem.countDocuments({ section: req.params.id });
 
-    if (items.length > 0) {
+    if (itemscount > 0) {
       return res.status(400).json({
         message: "Delete menu items first",
       });
