@@ -9,12 +9,12 @@ const MenuItem = require("../models/menuItems/MenuItem");
  */
 exports.createMenuSection = async (req, res) => {
   try {
-    const { name, description, isActive, cuisine, order, } = req.body;
+    let { name, description, isActive, cuisine, order, } = req.body;
 
     if (!name || !cuisine) {
       return res.status(400).json({ message: "Name and cuisine are required" });
     }
-
+    name = name.trim().toUpperCase();
     // Check cuisine exists
     const cuisineExists = await Cuisine.findById(cuisine);
     if (!cuisineExists) {
@@ -30,6 +30,12 @@ exports.createMenuSection = async (req, res) => {
     const section = await MenuSection.create({ name, description, isActive, cuisine, order });
     res.status(201).json(section);
   } catch (error) {
+    //  Handle Mongo unique index error (race condition safe)
+    if (error.code === 11000) {
+      return res
+        .status(400)
+        .json({ message: "Section already exists for this cuisine" });
+    }
     res.status(500).json({ message: error.message });
   }
 };
@@ -79,7 +85,22 @@ exports.updateMenuSection = async (req, res) => {
       return res.status(404).json({ message: "Menu section not found" });
     }
     if ("name" in req.body) {
-      section.name = req.body.name;
+            const newName = req.body.name.trim().toUpperCase();
+
+      // Check duplicate in SAME cuisine
+      const exists = await MenuSection.findOne({
+        name: newName,
+        cuisine: section.cuisine,
+        _id: { $ne: section._id }, // exclude self
+      });
+
+      if (exists) {
+        return res.status(400).json({
+          message: "Section already exists for this cuisine",
+        });
+      }
+
+      section.name = newName;
     }
 
     // If cuisine is being updated
@@ -88,6 +109,19 @@ exports.updateMenuSection = async (req, res) => {
       if (!cuisineExists) {
         return res.status(400).json({ message: "Invalid cuisine ID" });
       }
+            const checkName = section.name;
+
+      const exists = await MenuSection.findOne({
+        name: checkName,
+        cuisine: req.body.cuisine,
+        _id: { $ne: section._id },
+      });
+
+      if (exists) {
+        return res.status(400).json({
+          message: "Section already exists for this cuisine",
+        });
+      }
       section.cuisine = req.body.cuisine;
     }
     // section.name = req.body.name || section.name;
@@ -95,6 +129,12 @@ exports.updateMenuSection = async (req, res) => {
 
     res.json(section);
   } catch (error) {
+        // Safety net for DB-level uniqueness
+    if (error.code === 11000) {
+      return res
+        .status(400)
+        .json({ message: "Section already exists for this cuisine" });
+    }
     res.status(500).json({ message: error.message });
   }
 };

@@ -4,7 +4,9 @@ const mongoose = require("mongoose");
 const menuSectionSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        uppercase: true,
+        trim: true
     },
     description: {
         type: String,      // optional short text about the section
@@ -29,5 +31,7 @@ const menuSectionSchema = new mongoose.Schema({
         timestamps: true,    // adds createdAt & updatedAt automatically
     }
 );
+//  UNIQUE PER CUISINE
+menuSectionSchema.index({ name: 1, cuisine: 1 }, { unique: true });
 
 module.exports = mongoose.model("MenuSection", menuSectionSchema);
