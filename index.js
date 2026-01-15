@@ -14,7 +14,8 @@ const variantOptionRoutes=require("./routes/variantOptionRoutes.js")
 const addonRoutes=require("./routes/addonRoutes.js")
 const getMenuRoutes=require("./routes/getMenuRoutes.js")
 const dashboardSummaryRoutes=require("./routes/dashboardSummaryRoutes.js")
-
+const cartRoutes =require("./routes/cartRoutes.js")
+const orderRoutes = require("./routes/orderRoutes");
 connectDB(); // connect to MongoDB
 
 const app = express();
@@ -36,7 +37,8 @@ app.use("/api/menu",getMenuRoutes);
 app.use("/api/admin/dashboard",dashboardSummaryRoutes);
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
-
+app.use("/api/cart",cartRoutes)
+app.use("/api/orders", orderRoutes);
 const PORT = process.env.PORT || 5000;
 
 
