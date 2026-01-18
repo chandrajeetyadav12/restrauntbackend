@@ -22,7 +22,7 @@ exports.getMenuStructure = async (req, res) => {
         const items = await MenuItem.find({
           cuisine: cuisineId,
           section: section._id
-        }).select("name price image isVeg subcategory");
+        }).select("name price image isVeg subcategory,stock");
 
         // group by subcategory
         const grouped = items.reduce((acc, item) => {

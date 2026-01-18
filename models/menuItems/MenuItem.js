@@ -28,6 +28,12 @@ const menuItemSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+    stock: {
+    type: Number,
+    required: true,
+    min: 0,
+    default: 0
+  },
   salesCount: {
   type: Number,
   default: 0
