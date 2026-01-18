@@ -9,7 +9,12 @@ exports.addToCart = async (req, res) => {
   if (!menuItem) {
     return res.status(404).json({ message: "Item not found" });
   }
-
+ //  Stock check
+  if (menuItem.stock < quantity) {
+    return res.status(400).json({
+      message: "Item is out of stock",
+    });
+  }
   let cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
