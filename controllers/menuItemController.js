@@ -8,7 +8,7 @@ const Cuisine = require("../models/Cuisine");
  */
 exports.createMenuItem = async (req, res) => {
   try {
-    const { name, description, price,subcategory, cuisine, section,isVeg,isPopular,salesCount } = req.body;
+    const { name, description, price,subcategory, cuisine, section,isVeg,isPopular,salesCount,stock } = req.body;
 
     if (!name || !price || !cuisine || !section) {
       return res.status(400).json({ message: "Required fields missing" });
@@ -31,7 +31,8 @@ exports.createMenuItem = async (req, res) => {
       image: req.file?.path,
       isVeg,
       isPopular,
-      salesCount
+      salesCount,
+      stock
     });
 
     res.status(201).json(item);
@@ -130,7 +131,8 @@ exports.updateMenuItem = async (req, res) => {
     item.name = req.body.name || item.name;
     item.description = req.body.description || item.description;
     item.price = req.body.price || item.price;
-    item.isPopular=req.body.isPopular || item.isPopular
+    item.isPopular=req.body.isPopular || item.isPopular;
+    item.stock=req.body.stock || item.stock
 
     //  update subcategory correctly
     if ("subcategory" in req.body) {
