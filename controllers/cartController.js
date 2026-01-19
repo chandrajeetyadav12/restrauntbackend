@@ -10,11 +10,11 @@ exports.addToCart = async (req, res) => {
     return res.status(404).json({ message: "Item not found" });
   }
  //  Stock check
-  if (menuItem.stock < quantity) {
-    return res.status(400).json({
-      message: "Item is out of stock",
-    });
-  }
+  // if (menuItem.stock < quantity) {
+  //   return res.status(400).json({
+  //     message: "Item is out of stock",
+  //   });
+  // }
   let cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
@@ -29,20 +29,44 @@ exports.addToCart = async (req, res) => {
   );
 
   if (itemIndex > -1) {
-    cart.items[itemIndex].quantity += quantity;
+    const newQuantity = cart.items[itemIndex].quantity + quantity;
+
+    //  Stock check ONLY when increasing
+    if (quantity > 0 && newQuantity > menuItem.stock) {
+      return res.status(400).json({
+        message: "Item is out of stock",
+      });
+    }
+
+    // Update quantity
+    cart.items[itemIndex].quantity = newQuantity;
+
+    //  Remove item if quantity <= 0
+    if (cart.items[itemIndex].quantity <= 0) {
+      cart.items.splice(itemIndex, 1);
+    }
   } else {
-    cart.items.push({
-      menuItem: menuItemId,
-      quantity,
-      price: menuItem.price,
-    });
+    // Adding new item
+    if (quantity > 0) {
+      if (quantity > menuItem.stock) {
+        return res.status(400).json({
+          message: "Item is out of stock",
+        });
+      }
+
+      cart.items.push({
+        menuItem: menuItemId,
+        quantity,
+        price: menuItem.price,
+      });
+    }
   }
 
+  //  Recalculate total price
   cart.totalPrice = cart.items.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
-
   await cart.save();
   res.json(cart);
 };
