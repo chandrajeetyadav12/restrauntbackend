@@ -68,6 +68,7 @@ exports.addToCart = async (req, res) => {
     0
   );
   await cart.save();
+  await cart.populate("items.menuItem", "name price image");
   res.json(cart);
 };
 //  UPDATE CART ITEM 
@@ -103,6 +104,7 @@ exports.updateCartItem = async (req, res) => {
     );
 
     await cart.save();
+    await cart.populate("items.menuItem", "name price image");
     res.json(cart);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -133,6 +135,7 @@ exports.removeCartItem = async (req, res) => {
     );
 
     await cart.save();
+    await cart.populate("items.menuItem", "name price image");
     res.json(cart);
   } catch (error) {
     res.status(500).json({ message: error.message });
